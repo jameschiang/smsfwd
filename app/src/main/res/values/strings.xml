@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SmsFwd</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_sms">短信</string>
+    <string name="title_weixin">微信</string>
+    <string name="title_weibo">微博</string>
+    <string name="title_email">邮件</string>
+</resources>
