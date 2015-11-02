@@ -3,6 +3,8 @@ package com.jameschiang.smsfwd;
 
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
@@ -25,7 +28,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity {
-
+    private final String TAG = getClass().getCanonicalName();
     public static final String ACTION_BG_SRV = "com.jameschiang.smsfwd.SmsFwdBgSrv";
     public static final String ACTION_BG_RCV = "com.jameschiang.smsfwd.SmsFwdBgRcv";
 
@@ -44,6 +47,9 @@ public class MainActivity extends FragmentActivity {
         pager = (ViewPager)findViewById(R.id.pager);
         adapter = new MyPagerAdapter(getSupportFragmentManager());
 
+        tabs.setShouldExpand(true);// to get rid of the right drag indicator in the case of no scrolling demands.
+        tabs.setTabPaddingLeftRight(tabs.getTabPaddingLeftRight()/2);
+        Log.e(TAG,"tabs.getHeight() = " + tabs.getHeight());
         pager.setAdapter(adapter);
         final int pagerMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         pager.setPageMargin(pagerMargin);
@@ -88,8 +94,10 @@ public class MainActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class MyPagerAdapter extends FragmentPagerAdapter {
+    public class MyPagerAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider{
         private final int[] titles = {R.string.title_sms, R.string.title_weixin, R.string.title_weibo, R.string.title_email};
+        private final int[] icons = {R.drawable.sms_icon, R.drawable.weixin_icon, R.drawable.weibo_icon, R.drawable.email_icon};
+
         @Override
         public Fragment getItem(int position) {
             return SuperAwesomeCardFragment.newInstance(position);
@@ -177,6 +185,11 @@ public class MainActivity extends FragmentActivity {
         @Override
         public long getItemId(int position) {
             return super.getItemId(position);
+        }
+
+        @Override
+        public int getPageIconResId(int position) {
+            return icons[position];
         }
     }
 }
